@@ -1,0 +1,39 @@
+@import "reset.scss";
+@import "variables.scss";
+
+.header {
+  align-items: center;
+  padding: 15px;
+  display: flex;
+  margin: 0 auto;
+  width: 1178px;
+  border-bottom: 2px solid $text-light-gray;
+  height: 100px;
+
+  &__logo {
+    width: 125px;
+    height: 75px;
+  }
+
+  &__nav {
+    margin-left: auto;
+    display: flex;
+
+    &-img {
+      width: 30px;
+      height: 40px;
+      margin-right: 20px;
+    }
+
+    &-btn {
+      display: flex;
+    }
+
+    &-link {
+      cursor: pointer;
+    }
+  }
+
+  &__log-out {
+  }
+}

@@ -1,0 +1,149 @@
+.modal {
+  &__dropdown {
+    margin: 0 0 40px;
+    position: relative;
+
+    &-input {
+      width: 150px;
+      height: 40px;
+      border: 1px solid $bg-purple;
+      border-radius: 5px;
+      background-color: #f4f0f0;
+      margin: 10px 20px 0 0;
+    }
+
+    &-label {
+      text-transform: uppercase;
+      font-size: 1.4rem;
+    }
+
+    &-textarea {
+      margin: 10px 20px 0 0;
+      width: 450px;
+      height: 40px;
+      align-items: center;
+    }
+
+    &-select {
+      appearance: none;
+      background-color: $text-white;
+      border: 1px solid $text-light-gray;
+      border-radius: 7px;
+      cursor: pointer;
+      font-size: 1.6rem;
+      height: 40px;
+      padding: 0 0 0 13px;
+      width: 270px;
+    }
+
+    &-option {
+      font-family: $body-font;
+      font-weight: $body-fw;
+      height: 40px;
+      width: 270px;
+    }
+  }
+}
+
+.form {
+  align-items: center;
+  margin-bottom: 10px;
+  position: relative;
+
+  &__name {
+    color: $bg-black;
+    display: block;
+    font-size: 1.4rem;
+    font-weight: 500;
+    line-height: 17px;
+    margin: 40px 0 15px;
+    text-transform: uppercase;
+  }
+
+  &__date {
+    margin: 20px auto;
+    position: relative;
+    align-items: center;
+    text-align: center;
+  }
+
+  &__textarea {
+    margin: 20px auto;
+  }
+
+  &-checkboxes {
+    display: flex;
+    justify-content: space-between;
+    margin: 30px auto;
+    width: 400px;
+
+    .form:nth-child(1) {
+      margin-left: 0;
+    }
+
+    .form {
+      margin: 5px 0 0 20px;
+    }
+  }
+
+  &__button {
+    background-color: $text-white;
+    border-color: transparent;
+    color: $bg-black;
+    cursor: pointer;
+    display: block;
+    font-size: 1.6rem;
+    font-weight: 500;
+    height: 40px;
+    letter-spacing: 0.06em;
+    line-height: 1.87;
+    margin: auto;
+    margin-top: 15px;
+    width: 120px;
+
+    &--create {
+      background: #6447f5;
+      border-radius: 7px;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);
+      color: $text-white;
+      height: 40px;
+      width: 120px;
+
+      &:hover {
+        background: linear-gradient(101.74deg, #222e55 11.78%, #4e71e3 87.9%);
+      }
+    }
+
+    &--cancel:hover {
+      background: #6447f5;
+      border-radius: 7px;
+      box-shadow: 0 4px 4px rgba(0, 0, 0, 0.15);
+      color: $text-white;
+      height: 40px;
+      width: 120px;
+    }
+
+    &--disabled {
+      background: $text-light-gray;
+
+      &:hover {
+        background: $text-light-gray;
+      }
+    }
+  }
+
+  &__error {
+    color: red;
+    font-size: 1.4rem;
+    margin: 0 0 0 5px;
+  }
+}
+
+.btn-container {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.underline {
+  border-bottom: 1px solid $bg-black;
+}

@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;1,500;1,700&display=swap"
+        rel="stylesheet">
+    <title>ProjectName/regitration</title>
+</head>
+
+<body>
+    <header class="header">
+        <a class="header__link" href="chat.html">
+            <img src="./img/logo.svg" class="header__logo" alt="logo" />
+        </a>
+    </header>
+    <div class="inner">
+        <div class="box-auth">
+            <form class="box-auth__form">
+                <h1 class="box-auth__header">Sign up</h1>
+
+                <label class="box-auth__label">Login</label>
+                <input class="box-auth__input" type="text" name="login" pattern="[a-zA-Z0-9]{3,25}" required>
+
+                <label class="box-auth__label">email</label>
+                <input class="box-auth__input" type="email" name="email" pattern="[a-zA-Z0-9]{3,50}" required>
+
+                <label class="box-auth__label">nickname</label>
+                <input class="box-auth__input" type="text" name="nickname" pattern="[a-zA-Z0-9]{6,25}" required>
+
+                <label class="box-auth__label">Your phone</label>
+                <input class="box-auth__input" type="text" name="phone" pattern="[a-zA-Z0-9]{9,15}" required>
+
+                <label class="box-auth__label">Password</label>
+                <input class="box-auth__input" type="text" name="password" pattern="[a-zA-Z0-9]{6,25}" required>
+
+                <label class="box-auth__label">Confirm password</label>
+                <input class="box-auth__input" type="text" name="confirm" pattern="[a-zA-Z0-9]{6,25}" required>
+
+                <label class="box-auth__label">Your first name</label>
+                <input class="box-auth__input" type="text" name="firstname" pattern="[a-zA-Z0-9]{6,25}" required>
+
+                <label class="box-auth__label">Your last name</label>
+                <input class="box-auth__input" type="text" name="lastname" pattern="[a-zA-Z0-9]{6,25}" required>
+
+                <input class="box-auth__submit" type="submit" name="submit" id="submit-reg" value="Create account">
+                <div class="box-auth__redirect">Already have an account? <a href="index.html"
+                        class="box-auth__link">Sign in</a></div>
+                <div class="box-auth__redirect box-auth__redirect--guess"><a href="chat.html"
+                        class="box-auth__link box-auth__link--guess" id="guest">Log in </a>as Guest</div>
+            </form>
+            <div class="box-auth__error">
+                <p class="error-text"></p>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/3.1.2/rollups/aes.js"></script>
+</body>
+
+</html>

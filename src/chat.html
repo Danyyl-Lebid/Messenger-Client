@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+  <meta charset="UTF-8"/>
+  <title>Chat</title>
+  <link rel="stylesheet" type="text/css" href="http://127.0.0.1:8000/chat/style"/>
+</head>
+<body>
+<div id="container">
+  <aside>
+    <ul id="users"></ul>
+  </aside>
+  <main>
+    <ul id="chat"></ul>
+    <footer>
+      <input id="message" type="text">
+      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_picture.png" alt="">
+      <img src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/1940306/ico_file.png" alt="">
+      <button id="btn">Send</button>
+    </footer>
+  </main>
+</div>
+<script type="text/javascript">
+  $('#chat').animate({
+    scrollTop: $('#chat').get(0).scrollHeight
+  }, 2000);
+</script>
+</body>
+</html>
