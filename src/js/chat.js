@@ -10,16 +10,7 @@ const btn = document.getElementById('btn');
 
 msg.focus();
 const nickname = getCookie("nickName");
-const token = getCookie("token");
-
-console.log(token)
-
-let payloadToken = {
-    //TOken
-    nickname: nickname,
-    expireIn: new Date(),
-    createdAt: new Date(),
-}
+const token = getCookie("token").toString();
 
 const usersNickName = nickname => {
     const line = document.createElement('li');
@@ -56,14 +47,20 @@ const writeLine = text => {
     chat.appendChild(line);
 };
 
-socket.onopen = () => {
-    writeLine('<div class="connect">Connected</div>');
 
+socket.onopen = () => {
+
+    writeLine('<div class="connect">Connected</div>');
+    let payload = {
+        text: "Has connected to chat.",
+        time: new Date(),
+        nickname: nickname
+    }
     usersNickName(nickname);
     let envelope = {
         topic: 'LOGIN',
         token: token,
-        payload: ""
+        payload: JSON.stringify(payload)
     };
     socket.send(JSON.stringify(envelope));
 };
@@ -109,13 +106,13 @@ msg.addEventListener('keydown', event => {
 });
 
 socket.onmessage = function (event) {
-    let message = JSON.parse(event.data);
-    if (message) {
-        let payload = JSON.parse(message.payload);
+    let payload = JSON.parse(event.data);
+    if (payload) {
         if (payload && payload.text) {
             writeLineNickName(payload.nickname);
             writeLineTime(payload.time);
             writeLine(payload.text);
         }
     }
+
 };
