@@ -1,4 +1,5 @@
 import "../css/chat.css";
+import {getCookie} from "./helpers/cookieHelper";
 const CHAR_RETURN = 13;
 
 const socket = new WebSocket('ws://localhost:8080/chat');
@@ -8,13 +9,17 @@ const msg = document.getElementById('message');
 const btn = document.getElementById('btn');
 
 msg.focus();
+const nickname = getCookie("nickName");
+const token = getCookie("token");
+
+
 let payloadToken = {
-    /*login: 'Tura',
-    firstName: 'Vasia',
-    lastName: 'Pupcin',
+    //TOken
+    nickname: nickname,
     expireIn: new Date(),
-    createdAt: new Date(),*/ // TODO Nickname, time (long), text
+    createdAt: new Date(),
 }
+
 
 const usersNickName = nickname => {
     const line = document.createElement('li');
@@ -54,11 +59,11 @@ const writeLine = text => {
 socket.onopen = () => {
     writeLine('<div class="connect">Connected</div>');
 
-    usersNickName(payloadToken.login);
+    usersNickName(nickname);
     let envelope = {
-        topic: 'LOGIN',
-        token: payloadToken,
-        payload: ""
+        topic: 'auth',
+        token: token,
+        payload: JSON.stringify(payloadToken)
     };
     socket.send(JSON.stringify(envelope));
 };
@@ -71,15 +76,14 @@ btn.onclick = () => {
     const s = msg.value;
     msg.value = '';
     let payloadToken = {
-        nickname: 'Tura', //todo get from local storage
+        nickname: 'Tura',
         time: new Date(),
         text: s
     }
 
     let envelope = {
-        topic: 'GLOBAL_MESSAGE',
-        token: payloadToken,
-        payload: ""
+        topic: 'messages',
+        payload: JSON.stringify(payloadToken)
     };
     socket.send(JSON.stringify(envelope));
 }
@@ -89,7 +93,7 @@ msg.addEventListener('keydown', event => {
         const s = msg.value;
         msg.value = '';
         let payloadToken = {
-            nickname: 'Tura',
+            nickname: nickname,
             time: new Date(),
             text: s
         }
