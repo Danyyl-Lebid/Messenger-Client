@@ -12,6 +12,8 @@ msg.focus();
 const nickname = getCookie("nickName");
 const token = getCookie("token");
 
+console.log(token)
+
 let payloadToken = {
     //TOken
     nickname: nickname,
