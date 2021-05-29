@@ -24,13 +24,10 @@ export const IndexInit = () => {
             password: password.value,
         };
 
-        const authURL = URL + "/users/auth";
+        const authURL = URL + "/messenger/auth";
         axios.post(authURL, bodyObject
         ).then((response) => {
             if (response.status === 200) {
-                // if (data.body.role !== 'admin') {
-                //     data.body.role = 'user';
-                // }
                 setCookie("nickName",response.headers.nickname);
                 setCookie("token", response.data);
                 // setLocalStorage("role", data.body.role);
