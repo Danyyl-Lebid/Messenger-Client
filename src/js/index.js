@@ -24,7 +24,7 @@ export const IndexInit = () => {
             password: password.value,
         };
 
-        const authURL = URL + "/users/auth";
+        const authURL = URL + "/messenger/auth";
         axios.post(authURL, bodyObject
         ).then((response) => {
             if (response.status === 200) {

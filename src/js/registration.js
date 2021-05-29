@@ -53,7 +53,7 @@ export const regInit = () => {
         body: JSON.stringify(bodyObject),
       };
 
-      const authURL = URL + "/users/reg";
+      const authURL = URL + "/messenger/reg";
       renderText(errorText, "");
       postRequest(authURL, options)
         .then((data) => {

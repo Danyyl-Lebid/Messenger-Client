@@ -50,7 +50,6 @@ const writeLine = text => {
 
 socket.onopen = () => {
 
-    writeLine('<div class="connect">Connected</div>');
     let payload = {
         text: "Has connected to chat.",
         time: new Date(),
@@ -114,5 +113,4 @@ socket.onmessage = function (event) {
             writeLine(payload.text);
         }
     }
-
 };
