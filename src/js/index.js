@@ -28,9 +28,6 @@ export const IndexInit = () => {
         axios.post(authURL, bodyObject
         ).then((response) => {
             if (response.status === 200) {
-                // if (data.body.role !== 'admin') {
-                //     data.body.role = 'user';
-                // }
                 setCookie("nickName",response.headers.nickname);
                 setCookie("token", response.data);
                 // setLocalStorage("role", data.body.role);

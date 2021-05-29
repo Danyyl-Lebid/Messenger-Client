@@ -8,7 +8,7 @@ import {
 import { postRequest, URL } from "./helpers/request.js";
 import { redirect } from "./helpers/general.js";
 import { renderError, renderText } from "./helpers/render.js";
-import { setLocalStorage } from "./helpers/localStorageOperations.js";
+import axios from "axios";
 
 export const regInit = () => {
   //login nodes
@@ -21,14 +21,8 @@ export const regInit = () => {
   const phone = regForm.phone;
   const firstname = regForm.firstname;
   const lastname = regForm.lastname;
-  const guestLink = document.querySelector("#guest");
   const signButton = document.querySelector("#submit-reg");
   const errorText = document.querySelector(".error-text");
-
-  guestLink.addEventListener("click", (e) => {
-    setLocalStorage("role", "guest");
-    redirect("chat.html");
-  });
 
   signButton.addEventListener("click", (event) => {
     event.preventDefault();
@@ -46,18 +40,13 @@ export const regInit = () => {
         nickname: nickname.value,
         phone: phone.value,
       };
-      const options = {
-        method: "POST",
-        mode: "no-cors",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(bodyObject),
-      };
 
       const authURL = URL + "/messenger/reg";
       renderText(errorText, "");
-      postRequest(authURL, options)
+      axios.post(authURL, bodyObject
+      )
         .then((data) => {
-          console.log(data.status);
+          console.log("data.status");
           if (data.status === 200) {
             redirect("index.html");
           } else {
