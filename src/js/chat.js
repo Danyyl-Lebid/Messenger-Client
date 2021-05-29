@@ -12,15 +12,12 @@ msg.focus();
 const nickname = getCookie("nickName");
 const token = getCookie("token");
 
-
 let payloadToken = {
-    message: msg.value,
+    //TOken
     nickname: nickname,
     expireIn: new Date(),
     createdAt: new Date(),
 }
-
-
 
 const usersNickName = nickname => {
     const line = document.createElement('li');
@@ -62,9 +59,9 @@ socket.onopen = () => {
 
     usersNickName(nickname);
     let envelope = {
-        topic: 'auth',
+        topic: 'LOGIN',
         token: token,
-        payload: JSON.stringify(payloadToken)
+        payload: ""
     };
     socket.send(JSON.stringify(envelope));
 };
@@ -74,18 +71,18 @@ socket.onclose = () => {
 };
 
 btn.onclick = () => {
-
     const s = msg.value;
     msg.value = '';
-    let payloadToken = {
+    let payload = {
         nickname: nickname,
         time: new Date(),
         text: s
     }
 
     let envelope = {
-        topic: 'messages',
-        payload: JSON.stringify(payloadToken)
+        topic: 'GLOBAL_MESSAGE',
+        token: token,
+        payload: JSON.stringify(payload)
     };
     socket.send(JSON.stringify(envelope));
 }
@@ -94,15 +91,16 @@ msg.addEventListener('keydown', event => {
     if (event.keyCode === CHAR_RETURN) {
         const s = msg.value;
         msg.value = '';
-        let payloadToken = {
+        let payload = {
             nickname: nickname,
             time: new Date(),
             text: s
         }
 
         let envelope = {
-            topic: 'messages',
-            payload: JSON.stringify(payloadToken)
+            topic: 'GLOBAL_MESSAGE',
+            token: token,
+            payload: JSON.stringify(payload)
         };
         socket.send(JSON.stringify(envelope));
     }
@@ -118,5 +116,4 @@ socket.onmessage = function (event) {
             writeLine(payload.text);
         }
     }
-
 };

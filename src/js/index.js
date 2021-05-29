@@ -28,7 +28,6 @@ export const IndexInit = () => {
         axios.post(authURL, bodyObject
         ).then((response) => {
             if (response.status === 200) {
-
                 // if (data.body.role !== 'admin') {
                 //     data.body.role = 'user';
                 // }
