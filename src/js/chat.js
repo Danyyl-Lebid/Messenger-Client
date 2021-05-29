@@ -14,11 +14,12 @@ const token = getCookie("token");
 
 
 let payloadToken = {
-    //TOken
+    message: msg.value,
     nickname: nickname,
     expireIn: new Date(),
     createdAt: new Date(),
 }
+
 
 
 const usersNickName = nickname => {
@@ -73,10 +74,11 @@ socket.onclose = () => {
 };
 
 btn.onclick = () => {
+
     const s = msg.value;
     msg.value = '';
     let payloadToken = {
-        nickname: 'Tura',
+        nickname: nickname,
         time: new Date(),
         text: s
     }
@@ -116,4 +118,5 @@ socket.onmessage = function (event) {
             writeLine(payload.text);
         }
     }
+
 };
