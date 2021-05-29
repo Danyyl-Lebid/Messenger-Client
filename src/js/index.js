@@ -39,37 +39,33 @@ export const IndexInit = () => {
             login: login.value,
             password: password.value,
         };
+
         const authURL = URL + "/users/auth";
         axios.post(authURL, bodyObject
         ).then((data) => {
-            let buffer = data.data.split(".");
+
+            console.log(data.headers.nickname);
+            /*let buffer = data.data.split(".");
             let publicToken = buffer[0];
             let bytes  = CryptoJS.AES.decrypt(publicToken, "NotTheBestChoice");
 
-            let originalText = bytes.toString(CryptoJS.enc.Utf8);
+            let originalText = bytes.toString(CryptoJS.enc.Utf8);*/
 
-            console.log(publicToken);
-            console.log(originalText);
-            //
-            // console.log(bytes);
-            // let privateToken = buffer[1];
-
-            // renderText(errorText, "");
-            console.log(data.status === 200);
-            if (data.status === 600) {
+            if (data.status === 200) {
                 // if (data.body.role !== 'admin') {
                 //     data.body.role = 'user';
                 // }
-                // setCookie("token", data.body.token);
-                // setLocalStorage("role", data.body.role);
+                //setCookie("token", data.body.token);
+                setLocalStorage(data);
                 redirect("chat.html");
-            } else return renderError(errorText, "некоректный логин или пароль");
+            } else {
+                return renderError(errorText, "некоректный логин или пароль");
+            }
         })
             .catch((e) => {
                 renderText(errorText, "");
                 return renderError(errorText, "некоректный логин или пароль");
             });
-
     });
 };
 

@@ -9,11 +9,11 @@ const btn = document.getElementById('btn');
 
 msg.focus();
 let payloadToken = {
-    login: 'Tura',
+    /*login: 'Tura',
     firstName: 'Vasia',
     lastName: 'Pupcin',
     expireIn: new Date(),
-    createdAt: new Date(),
+    createdAt: new Date(),*/ // TODO Nickname, time (long), text
 }
 
 const usersNickName = nickname => {
@@ -56,8 +56,9 @@ socket.onopen = () => {
 
     usersNickName(payloadToken.login);
     let envelope = {
-        topic: 'auth',
-        payload: JSON.stringify(payloadToken)
+        topic: 'LOGIN',
+        token: payloadToken,
+        payload: ""
     };
     socket.send(JSON.stringify(envelope));
 };
@@ -70,14 +71,15 @@ btn.onclick = () => {
     const s = msg.value;
     msg.value = '';
     let payloadToken = {
-        nickname: 'Tura',
+        nickname: 'Tura', //todo get from local storage
         time: new Date(),
         text: s
     }
 
     let envelope = {
-        topic: 'messages',
-        payload: JSON.stringify(payloadToken)
+        topic: 'GLOBAL_MESSAGE',
+        token: payloadToken,
+        payload: ""
     };
     socket.send(JSON.stringify(envelope));
 }
