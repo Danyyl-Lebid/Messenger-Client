@@ -5,7 +5,6 @@ const CHAR_RETURN = 13;
 
 const socket = new WebSocket('ws://localhost:8080/chat');
 const usr = document.getElementById('users');
-const rooms = document.getElementById('rooms');
 const chat = document.getElementById('chat');
 const msg = document.getElementById('message');
 const btn = document.getElementById('btn');
@@ -13,7 +12,6 @@ const btn = document.getElementById('btn');
 msg.focus();
 const nickname = getCookie("nickName");
 const token = getCookie("token").toString();
-const nicknames = getCookie("nickName");
 
 const usersNickName = nickname => {
     const line = document.createElement('li');
@@ -27,21 +25,6 @@ const usersNickName = nickname => {
                 </div>`;
     usr.appendChild(line);
 };
-
-//=================================================================
-const usersNickNames = nicknames => {
-    const line = document.createElement('li');
-    line.innerHTML = `<img src="https://www.meme-arsenal.com/memes/755658588d31fbf527a72b152150e4fa.jpg" alt="">
-                <div>
-                    <h2>${nicknames}</h2>
-                    <h3>
-                        <span class="status green"></span>
-                        online
-                    </h3>
-                </div>`;
-    usr.appendChild(line);
-};
-//=================================================================
 
 const writeLineNickName = nickname => {
     const line = document.createElement('div');
@@ -80,6 +63,21 @@ socket.onopen = () => {
         payload: JSON.stringify(payload)
     };
     socket.send(JSON.stringify(envelope));
+
+    let envelope2 = {
+        topic: 'NICKNAMES',
+        token: token,
+        payload: JSON.stringify(payload)
+    };
+    socket.send(JSON.stringify(envelope2));
+};
+
+
+const writeLine = text => {
+    const line = document.createElement('div');
+    line.setAttribute("class", "messageText");
+    line.innerHTML = `<p>${text}</p>`;
+    chat.appendChild(line);
 };
 
 socket.onclose = () => {
@@ -124,8 +122,10 @@ msg.addEventListener('keydown', event => {
 
 socket.onmessage = function (event) {
     let envelope = JSON.parse(event.data);
+
     if (envelope.payload) {
         let payload = JSON.parse(envelope.payload);
+        console.log(payload)
         if (payload) {
             switch (envelope.topic) {
                 case "GLOBAL_MESSAGE":
@@ -133,6 +133,13 @@ socket.onmessage = function (event) {
                         writeLineNickName(payload.nickname);
                         writeLineTime(payload.time);
                         writeLine(payload.text);
+                    }
+                    break;
+                case "NICKNAMES":
+                    for (let i = 0; i < payload.length; i++) {
+                        console.log(payload[i].nickname);
+                        addAvailableUsers(payload[i].nickname +"        "  + payload[i].status);
+
                     }
             }
         }
@@ -153,6 +160,6 @@ function addAvailableUsers(nickname) {
     content.appendChild(document.createTextNode(nickname));
     contact.appendChild(content);
 
-    let contacts = document.getElementById("rooms");
+    let contacts = document.getElementById("users");
     contacts.appendChild(contact);
 }
