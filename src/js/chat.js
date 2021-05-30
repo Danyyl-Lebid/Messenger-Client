@@ -27,6 +27,7 @@ const usersNickName = nickname => {
 };
 
 
+
 const writeLineNickName = nickname => {
     const line = document.createElement('div');
     line.innerHTML = `<p>${nickname}</p>`;
@@ -130,29 +131,22 @@ socket.onmessage = function (event) {
                     break;
                 case "NICKNAMES":
                     for (let i = 0; i < payload.length; i++) {
-                        console.log(payload[i].nickname);
-                        addAvailableUsers(payload[i].nickname +"        "  + payload[i].status);
-
+                        usersNickNames(payload[i]);
                     }
             }
         }
     }
 };
 
-function addAvailableUsers(nickname) {
-
-    let contact = document.createElement("div");
-    contact.setAttribute("class", "contact");
-
-    let status = document.createElement("div");
-    status.setAttribute("class", "status");
-    contact.appendChild(status);
-
-    let content = document.createElement("span");
-    content.setAttribute("class", "name");
-    content.appendChild(document.createTextNode(nickname));
-    contact.appendChild(content);
-
-    let contacts = document.getElementById("users");
-    contacts.appendChild(contact);
-}
+const usersNickNames = payload => {
+    const line = document.createElement('li');
+    line.innerHTML = `<img src="https://www.meme-arsenal.com/memes/755658588d31fbf527a72b152150e4fa.jpg" alt="">
+                <div>
+                    <h2>${payload.nickname}</h2>                
+                    <h3>
+                        <span class="status green"></span>
+                        ${payload.status}
+                    </h3>
+                </div>`;
+    usr.appendChild(line);
+};
