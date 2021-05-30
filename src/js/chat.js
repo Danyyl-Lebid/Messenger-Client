@@ -5,6 +5,7 @@ const CHAR_RETURN = 13;
 
 const socket = new WebSocket('ws://localhost:8080/chat');
 const usr = document.getElementById('users');
+const rooms = document.getElementById('rooms');
 const chat = document.getElementById('chat');
 const msg = document.getElementById('message');
 const btn = document.getElementById('btn');
@@ -12,6 +13,7 @@ const btn = document.getElementById('btn');
 msg.focus();
 const nickname = getCookie("nickName");
 const token = getCookie("token").toString();
+const nicknames = getCookie("nickName");
 
 const usersNickName = nickname => {
     const line = document.createElement('li');
@@ -25,6 +27,21 @@ const usersNickName = nickname => {
                 </div>`;
     usr.appendChild(line);
 };
+
+//=================================================================
+const usersNickNames = nicknames => {
+    const line = document.createElement('li');
+    line.innerHTML = `<img src="https://www.meme-arsenal.com/memes/755658588d31fbf527a72b152150e4fa.jpg" alt="">
+                <div>
+                    <h2>${nicknames}</h2>
+                    <h3>
+                        <span class="status green"></span>
+                        online
+                    </h3>
+                </div>`;
+    usr.appendChild(line);
+};
+//=================================================================
 
 const writeLineNickName = nickname => {
     const line = document.createElement('div');
@@ -121,3 +138,21 @@ socket.onmessage = function (event) {
         }
     }
 };
+
+function addAvailableUsers(nickname) {
+
+    let contact = document.createElement("div");
+    contact.setAttribute("class", "contact");
+
+    let status = document.createElement("div");
+    status.setAttribute("class", "status");
+    contact.appendChild(status);
+
+    let content = document.createElement("span");
+    content.setAttribute("class", "name");
+    content.appendChild(document.createTextNode(nickname));
+    contact.appendChild(content);
+
+    let contacts = document.getElementById("rooms");
+    contacts.appendChild(contact);
+}
