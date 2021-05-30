@@ -5,6 +5,7 @@ const CHAR_RETURN = 13;
 
 const socket = new WebSocket('ws://localhost:8080/chat');
 const usr = document.getElementById('users');
+const rms = document.getElementById('rooms');
 const chat = document.getElementById('chat');
 const msg = document.getElementById('message');
 const btn = document.getElementById('btn');
@@ -41,14 +42,6 @@ const writeLineTime = time => {
     chat.appendChild(line);
 };
 
-const writeLine = text => {
-    const line = document.createElement('div');
-    line.setAttribute("class", "messageText");
-    line.innerHTML = `<p>${text}</p>`;
-    chat.appendChild(line);
-};
-
-
 socket.onopen = () => {
 
     let payload = {
@@ -70,6 +63,13 @@ socket.onopen = () => {
         payload: JSON.stringify(payload)
     };
     socket.send(JSON.stringify(envelope2));
+
+    let envelope3 = {
+        topic: 'CHATS',
+        token: token,
+        payload: JSON.stringify(payload)
+    };
+    socket.send(JSON.stringify(envelope3));
 };
 
 
@@ -125,8 +125,8 @@ socket.onmessage = function (event) {
 
     if (envelope.payload) {
         let payload = JSON.parse(envelope.payload);
-        console.log(payload)
         if (payload) {
+            console.log(envelope.topic);
             switch (envelope.topic) {
                 case "GLOBAL_MESSAGE":
                     if (payload.text) {
@@ -137,29 +137,39 @@ socket.onmessage = function (event) {
                     break;
                 case "NICKNAMES":
                     for (let i = 0; i < payload.length; i++) {
-                        console.log(payload[i].nickname);
-                        addAvailableUsers(payload[i].nickname +"        "  + payload[i].status);
-
+                        usersNickNames(payload[i]);
                     }
+                    break;
+                case "CHATS":
+                    console.log(payload);
+                    for (let i = 0; i < payload.length; i++) {
+                        chatsRooms(payload[i]);
+                    }
+                    break;
             }
         }
     }
 };
 
-function addAvailableUsers(nickname) {
+const usersNickNames = payload => {
+    const line = document.createElement('li');
+    line.innerHTML = `<img src="https://www.meme-arsenal.com/memes/755658588d31fbf527a72b152150e4fa.jpg" alt="">
+                <div>
+                    <h2>${payload.nickname}</h2>                
+                    <h3>
+                        <span class="status green"></span>
+                        ${payload.status}
+                    </h3>
+                </div>`;
+    usr.appendChild(line);
+};
 
-    let contact = document.createElement("div");
-    contact.setAttribute("class", "contact");
-
-    let status = document.createElement("div");
-    status.setAttribute("class", "status");
-    contact.appendChild(status);
-
-    let content = document.createElement("span");
-    content.setAttribute("class", "name");
-    content.appendChild(document.createTextNode(nickname));
-    contact.appendChild(content);
-
-    let contacts = document.getElementById("users");
-    contacts.appendChild(contact);
-}
+const chatsRooms = payload => {
+    const line1 = document.createElement('li');
+    line1.innerHTML = `
+                    <img src="https://www.meme-arsenal.com/memes/755658588d31fbf527a72b152150e4fa.jpg" alt="">
+                        <div id=${payload.id}>
+                            <h2>${payload.name}</h2>                
+                        </div>`;
+    rms.appendChild(line1);
+};
