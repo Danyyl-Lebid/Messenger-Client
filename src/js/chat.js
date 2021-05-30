@@ -1,5 +1,6 @@
 import "../css/chat.css";
 import {getCookie} from "./helpers/cookieHelper";
+
 const CHAR_RETURN = 13;
 
 const socket = new WebSocket('ws://localhost:8080/chat');
@@ -105,12 +106,18 @@ msg.addEventListener('keydown', event => {
 });
 
 socket.onmessage = function (event) {
-    let payload = JSON.parse(event.data);
-    if (payload) {
-        if (payload && payload.text) {
-            writeLineNickName(payload.nickname);
-            writeLineTime(payload.time);
-            writeLine(payload.text);
+    let envelope = JSON.parse(event.data);
+    if (envelope.payload) {
+        let payload = JSON.parse(envelope.payload);
+        if (payload) {
+            switch (envelope.topic) {
+                case "GLOBAL_MESSAGE":
+                    if (payload.text) {
+                        writeLineNickName(payload.nickname);
+                        writeLineTime(payload.time);
+                        writeLine(payload.text);
+                    }
+            }
         }
     }
 };

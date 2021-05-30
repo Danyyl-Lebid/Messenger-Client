@@ -8,7 +8,7 @@ body {
 }
 
 #container {
-    width: 900px;
+    width: 1100px;
     height: 700px;
     background: #eff3f7;
     margin: 0 auto;
@@ -57,12 +57,24 @@ aside input::placeholder {
     color: #fff;
 }
 
-aside ul {
+ul {
+    list-style: none;
+    padding-left: 0;
+
+}
+
+.user ul {
+    margin: 0;
+    overflow-y: scroll;
+    height: 700px;
+}
+
+.room ul{
     padding-left: 0;
     margin: 0;
     list-style-type: none;
-    overflow-y: scroll;
     height: 700px;
+    overflow-y: scroll;
 }
 
 aside li {
@@ -295,4 +307,10 @@ main footer a {
 
 #btn:hover{
     background-color: #6fbced;
+}
+
+.users_name p, .rooms_name p{
+    text-align: center;
+    color: wheat;
+    font-size: 16px;
 }
