@@ -72,7 +72,9 @@ socket.onopen = () => {
         token: token,
         payload: JSON.stringify(payload)
     };
-    setTimeout( () => {socket.send(JSON.stringify(envelope2))}, 1000);
+
+    socket.send(JSON.stringify(envelope2));
+
 
     globalChat();
 
@@ -172,12 +174,11 @@ msg.addEventListener('keydown', event => {
 socket.onmessage = function (event) {
     let envelope = JSON.parse(event.data);
 
-    console.log(event.data)
 
     if (envelope.payload) {
         let payload = JSON.parse(envelope.payload);
         if (payload) {
-            console.log(envelope.topic);
+
             switch (envelope.topic) {
                 case "GLOBAL_MESSAGE":
                     if (payload.text) {
@@ -193,6 +194,32 @@ socket.onmessage = function (event) {
                         writeLineTime(payload.time);
                         writeLine(payload.text);
                         console.log(payload.text);
+                    }
+                    break;
+                case "CHAT_HISTORY":
+                    for (let i = 0; i < payload.length; i++) {
+                        let messageEnvelope = JSON.parse(payload[i]);
+                        let messagePayload = JSON.parse(messageEnvelope.payload);
+                        if (messagePayload.chatId != currentChatId) {
+                            console.log("HEX")
+                            console.log(messagePayload.chatId)
+                            console.log(currentChatId)
+                            continue;
+                        }
+                        writeLineNickName(messagePayload.nickname);
+                        writeLineTime(messagePayload.time);
+                        writeLine(messagePayload.text);
+                    }
+                    break;
+                case "GLOBAL_HISTORY":
+                    if (currentChatId === "global") {
+                        for (let i = 0; i < payload.length; i++) {
+                            let messageEnvelope = JSON.parse(payload[i]);
+                            let messagePayload = JSON.parse(messageEnvelope.payload);
+                            writeLineNickName(messagePayload.nickname);
+                            writeLineTime(messagePayload.time);
+                            writeLine(messagePayload.text);
+                        }
                     }
                     break;
                 case "NICKNAMES":
