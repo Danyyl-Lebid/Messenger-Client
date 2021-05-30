@@ -37,6 +37,18 @@
       chat.removeChild(chat.lastChild);
     }
   }
+  function cleanUsers() {
+    const user = document.getElementById("users");
+    while (user.hasChildNodes()) {
+      user.removeChild(user.lastChild);
+    }
+  }
+  function cleanRooms() {
+    const rooms = document.getElementById("rooms");
+    while (rooms.hasChildNodes()) {
+      rooms.removeChild(rooms.lastChild);
+    }
+  }
 </script>
 </body>
 </html>

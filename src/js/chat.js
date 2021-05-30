@@ -223,13 +223,30 @@ socket.onmessage = function (event) {
                     }
                     break;
                 case "NICKNAMES":
+                    cleanUsers();
+                    usersNickName(nickname);
                     for (let i = 0; i < payload.length; i++) {
+                        if (payload[i].nickname === nickname){
+                            continue
+                        }
                         usersNickNames(payload[i]);
                     }
                     break;
                 case "CHATS":
+                    cleanRooms();
+                    globalChat();
                     for (let i = 0; i < payload.length; i++) {
                         chatsRooms(payload[i]);
+                    }
+                    break;
+                case "PARTICIPANTS":
+                    cleanUsers();
+                    usersNickName(nickname);
+                    for (let i = 0; i < payload.length; i++) {
+                        if (payload[i].nickname === nickname){
+                            continue
+                        }
+                        usersNickNames(payload[i]);
                     }
                     break;
             }
@@ -266,6 +283,7 @@ function ClickOn(id) {
     cleanAvailable();
     currentChatId = id;
     getHistory(currentChatId);
+    getParticipants(currentChatId);
 }
 
 function getHistory(id) {
@@ -290,3 +308,26 @@ function getHistory(id) {
         socket.send(JSON.stringify(envelope));
     }
 }
+ const getParticipants = function (id) {
+    if (id === "global") {
+        let payload = {
+            id: id
+        };
+        let envelope = {
+            topic: "NICKNAMES",
+            token: token,
+            payload: JSON.stringify(payload)
+        }
+        socket.send(JSON.stringify(envelope));
+    } else {
+        let payload = {
+            id: id
+        };
+        let envelope = {
+            topic: "PARTICIPANTS",
+            token: token,
+            payload: JSON.stringify(payload)
+        }
+        socket.send(JSON.stringify(envelope));
+    }
+ }
