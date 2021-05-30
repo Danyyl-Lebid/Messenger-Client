@@ -9,6 +9,7 @@ const rms = document.getElementById('rooms');
 const chat = document.getElementById('chat');
 const msg = document.getElementById('message');
 const btn = document.getElementById('btn');
+let currentChatId = "global";
 
 msg.focus();
 const nickname = getCookie("nickName");
@@ -27,6 +28,16 @@ const usersNickName = nickname => {
     usr.appendChild(line);
 };
 
+const globalChat = global => {
+    const line = document.createElement('li');
+    line.id = "global";
+    line.innerHTML = `<button type="button" value="Sign In">Global Chat</button>`;
+    line.addEventListener('click', event => {
+        ClickOn(line.id)
+    });
+    rms.appendChild(line);
+};
+
 const writeLineNickName = nickname => {
     const line = document.createElement('div');
     line.innerHTML = `<p>${nickname}</p>`;
@@ -43,7 +54,6 @@ const writeLineTime = time => {
 };
 
 socket.onopen = () => {
-
     let payload = {
         text: "Has connected to chat.",
         time: new Date(),
@@ -62,7 +72,9 @@ socket.onopen = () => {
         token: token,
         payload: JSON.stringify(payload)
     };
-    socket.send(JSON.stringify(envelope2));
+    setTimeout( () => {socket.send(JSON.stringify(envelope2))}, 1000);
+
+    globalChat();
 
     let envelope3 = {
         topic: 'CHATS',
@@ -70,6 +82,7 @@ socket.onopen = () => {
         payload: JSON.stringify(payload)
     };
     socket.send(JSON.stringify(envelope3));
+    getHistory(currentChatId);
 };
 
 
@@ -87,24 +100,8 @@ socket.onclose = () => {
 btn.onclick = () => {
     const s = msg.value;
     msg.value = '';
-    let payload = {
-        nickname: nickname,
-        time: new Date(),
-        text: s
-    }
 
-    let envelope = {
-        topic: 'GLOBAL_MESSAGE',
-        token: token,
-        payload: JSON.stringify(payload)
-    };
-    socket.send(JSON.stringify(envelope));
-}
-
-msg.addEventListener('keydown', event => {
-    if (event.keyCode === CHAR_RETURN) {
-        const s = msg.value;
-        msg.value = '';
+    if (currentChatId === "global"){
         let payload = {
             nickname: nickname,
             time: new Date(),
@@ -118,10 +115,64 @@ msg.addEventListener('keydown', event => {
         };
         socket.send(JSON.stringify(envelope));
     }
+    else {
+        let payload = {
+            chatId: currentChatId,
+            nickname: nickname,
+            time: new Date(),
+            text: s
+        }
+
+        let envelope = {
+            topic: 'MESSAGE',
+            token: token,
+            payload: JSON.stringify(payload)
+        };
+        socket.send(JSON.stringify(envelope));
+    }
+}
+
+msg.addEventListener('keydown', event => {
+    if (event.keyCode === CHAR_RETURN) {
+        const s = msg.value;
+        msg.value = '';
+
+        if (currentChatId === "global"){
+            let payload = {
+                nickname: nickname,
+                time: new Date(),
+                text: s
+            }
+
+            let envelope = {
+                topic: 'GLOBAL_MESSAGE',
+                token: token,
+                payload: JSON.stringify(payload)
+            };
+            socket.send(JSON.stringify(envelope));
+        }
+        else {
+            let payload = {
+                chatId: currentChatId,
+                nickname: nickname,
+                time: new Date(),
+                text: s
+            }
+
+            let envelope = {
+                topic: 'MESSAGE',
+                token: token,
+                payload: JSON.stringify(payload)
+            };
+            socket.send(JSON.stringify(envelope));
+        }
+    }
 });
 
 socket.onmessage = function (event) {
     let envelope = JSON.parse(event.data);
+
+    console.log(event.data)
 
     if (envelope.payload) {
         let payload = JSON.parse(envelope.payload);
@@ -133,6 +184,15 @@ socket.onmessage = function (event) {
                         writeLineNickName(payload.nickname);
                         writeLineTime(payload.time);
                         writeLine(payload.text);
+                        console.log(payload.text);
+                    }
+                    break;
+                case "MESSAGE":
+                    if (payload.text && payload.chatId === currentChatId) {
+                        writeLineNickName(payload.nickname);
+                        writeLineTime(payload.time);
+                        writeLine(payload.text);
+                        console.log(payload.text);
                     }
                     break;
                 case "NICKNAMES":
@@ -141,7 +201,6 @@ socket.onmessage = function (event) {
                     }
                     break;
                 case "CHATS":
-                    console.log(payload);
                     for (let i = 0; i < payload.length; i++) {
                         chatsRooms(payload[i]);
                     }
@@ -166,29 +225,41 @@ const usersNickNames = payload => {
 
 const chatsRooms = payload => {
     const line = document.createElement('li');
-    line.innerHTML = `<button id=${payload.id} type="button" onclick="ClickOn(\"#${payload.id}\")" value="Sign In">${payload.name}</button>
+    line.id = payload.id;
+    line.innerHTML = `<button type="button" value="Sign In">${payload.name}</button>
 
 `;
-    // line.addEventListener("click", ClickOn(line.id))
+    line.addEventListener('click', event => {
+        ClickOn(line.id)
+    });
     rms.appendChild(line);
 };
 
-    function ClickOn(id) {
+function ClickOn(id) {
     cleanAvailable();
+    currentChatId = id;
+    getHistory(currentChatId);
 }
 
-/*
-const chatsRooms = payload => {
-    const line1 = document.createElement('li');
-    line1.innerHTML = `<script>
-                        function ClickOn() {
+function getHistory(id) {
+    if (id === "global") {
 
-                        }
-                       </script>
-                       <button id=${payload.id} type="button" onclick="ClickOn()" value="Sign In">${payload.name}</button>'
-                    <img src="https://www.meme-arsenal.com/memes/755658588d31fbf527a72b152150e4fa.jpg" alt="">
-                        <div id=${payload.id}>
-                            <h2>${payload.name}</h2>
-                        </div>`;
-    rms.appendChild(line1);
-};*/
+        let envelope = {
+            topic: 'GLOBAL_HISTORY',
+            token: token,
+            payload: "empty"
+        };
+        socket.send(JSON.stringify(envelope));
+    } else {
+        let payload = {
+            chatId: currentChatId,
+        }
+
+        let envelope = {
+            topic: 'CHAT_HISTORY',
+            token: token,
+            payload: JSON.stringify(payload)
+        };
+        socket.send(JSON.stringify(envelope));
+    }
+}
