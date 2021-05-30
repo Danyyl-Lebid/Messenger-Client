@@ -26,6 +26,7 @@ const usersNickName = nickname => {
     usr.appendChild(line);
 };
 
+
 const writeLineNickName = nickname => {
     const line = document.createElement('div');
     line.innerHTML = `<p>${nickname}</p>`;
@@ -41,14 +42,6 @@ const writeLineTime = time => {
     chat.appendChild(line);
 };
 
-const writeLine = text => {
-    const line = document.createElement('div');
-    line.setAttribute("class", "messageText");
-    line.innerHTML = `<p>${text}</p>`;
-    chat.appendChild(line);
-};
-
-
 socket.onopen = () => {
 
     let payload = {
@@ -63,6 +56,21 @@ socket.onopen = () => {
         payload: JSON.stringify(payload)
     };
     socket.send(JSON.stringify(envelope));
+
+    let envelope2 = {
+        topic: 'NICKNAMES',
+        token: token,
+        payload: JSON.stringify(payload)
+    };
+    socket.send(JSON.stringify(envelope2));
+};
+
+
+const writeLine = text => {
+    const line = document.createElement('div');
+    line.setAttribute("class", "messageText");
+    line.innerHTML = `<p>${text}</p>`;
+    chat.appendChild(line);
 };
 
 socket.onclose = () => {
@@ -107,8 +115,10 @@ msg.addEventListener('keydown', event => {
 
 socket.onmessage = function (event) {
     let envelope = JSON.parse(event.data);
+
     if (envelope.payload) {
         let payload = JSON.parse(envelope.payload);
+        console.log(payload)
         if (payload) {
             switch (envelope.topic) {
                 case "GLOBAL_MESSAGE":
@@ -117,7 +127,32 @@ socket.onmessage = function (event) {
                         writeLineTime(payload.time);
                         writeLine(payload.text);
                     }
+                    break;
+                case "NICKNAMES":
+                    for (let i = 0; i < payload.length; i++) {
+                        console.log(payload[i].nickname);
+                        addAvailableUsers(payload[i].nickname +"        "  + payload[i].status);
+
+                    }
             }
         }
     }
 };
+
+function addAvailableUsers(nickname) {
+
+    let contact = document.createElement("div");
+    contact.setAttribute("class", "contact");
+
+    let status = document.createElement("div");
+    status.setAttribute("class", "status");
+    contact.appendChild(status);
+
+    let content = document.createElement("span");
+    content.setAttribute("class", "name");
+    content.appendChild(document.createTextNode(nickname));
+    contact.appendChild(content);
+
+    let contacts = document.getElementById("users");
+    contacts.appendChild(contact);
+}
