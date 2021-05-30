@@ -30,5 +30,13 @@
     </ul>
   </aside>
 </div>
+<script>
+  function cleanAvailable() {
+    const chat = document.getElementById("chat");
+    while (chat.hasChildNodes()) {
+      chat.removeChild(chat.lastChild);
+    }
+  }
+</script>
 </body>
 </html>

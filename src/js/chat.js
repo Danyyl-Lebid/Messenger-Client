@@ -165,11 +165,30 @@ const usersNickNames = payload => {
 };
 
 const chatsRooms = payload => {
+    const line = document.createElement('li');
+    line.innerHTML = `<button id=${payload.id} type="button" onclick="ClickOn(\"#${payload.id}\")" value="Sign In">${payload.name}</button>
+
+`;
+    // line.addEventListener("click", ClickOn(line.id))
+    rms.appendChild(line);
+};
+
+    function ClickOn(id) {
+    cleanAvailable();
+}
+
+/*
+const chatsRooms = payload => {
     const line1 = document.createElement('li');
-    line1.innerHTML = `
+    line1.innerHTML = `<script>
+                        function ClickOn() {
+
+                        }
+                       </script>
+                       <button id=${payload.id} type="button" onclick="ClickOn()" value="Sign In">${payload.name}</button>'
                     <img src="https://www.meme-arsenal.com/memes/755658588d31fbf527a72b152150e4fa.jpg" alt="">
                         <div id=${payload.id}>
-                            <h2>${payload.name}</h2>                
+                            <h2>${payload.name}</h2>
                         </div>`;
     rms.appendChild(line1);
-};
+};*/
